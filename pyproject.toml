@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "hypermodern"
+version = "0.1.0"
+description = "The Hypermodern python project"
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/raiene/hypermodern"
+repository = "https://github.com/raiene/hypermodern"
+keywords = ["hypermodern"]
+authors = ["Raiene <raienesousa@mpto.mp.br>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+click = "^7.1.1"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
+[tool.poetry.scripts]
+hypermodern = "hypermodern.console:main"
