@@ -14,12 +14,15 @@ API_URL = "https://en.wikipedia.org/api/rest_v1/page/random/summary"
 def main():
     """The hypermodern python project."""
 
-    with requests.get(API_URL) as responses:
-        responses.raise_for_status()
-        data = responses.json()
+    try:
+        with requests.get(API_URL) as responses:
+            responses.raise_for_status()
+            data = responses.json()
 
-    title = data["title"]
-    extract = data["extract"]
+        title = data["title"]
+        extract = data["extract"]
 
-    click.secho(title, fg="red")
-    click.echo(textwrap.fill(extract))
+        click.secho(title, fg="blue")
+        click.echo(textwrap.fill(extract))
+    except requests.exceptions.ConnectionError:
+        click.secho("Sorry, Wikipedia API is unreacheble", fg="red")
