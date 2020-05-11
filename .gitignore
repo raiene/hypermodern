@@ -1,0 +1,4 @@
+.nox/*
+.coverage
+__pycache__
+*.egg-info/
