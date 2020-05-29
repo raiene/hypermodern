@@ -5,7 +5,7 @@ import nox
 locations = "src", "tests", "noxfile.py"
 
 
-nox.options.sessions = "lint", "tests", "safety"
+nox.options.sessions = "lint", "tests", "mypy"
 
 
 @nox.session(python=["3.8", "3.7"])
@@ -66,3 +66,10 @@ def install_with_constraints(session, *args, **kwargs):
             external=True,
         )
         session.install(f"--constraint={requirements.name}", *args, **kwargs)
+
+
+@nox.session(python=["3.8", "3.7"])
+def mypy(session):
+    args = session.posargs or locations
+    install_with_constraints(session, "mypy")
+    session.run("mypy", *args)
