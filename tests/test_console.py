@@ -5,7 +5,6 @@ import pytest
 from pytest_mock import MockFixture
 import requests
 
-
 from hypermodern import console
 
 
@@ -15,16 +14,17 @@ def runner() -> CliRunner:
 
 
 @pytest.fixture
-def mock_requests_get(mocker):
-    mock = mocker.patch("requests.get")
-    mock.return_value.__enter__.return_value.json.return_value = {
-        "title": "Lorem Ipsum",
-        "extract": "Lorem ipsum dolor sit amet",
-    }
-    return mock
+def mock_wikipedia_random_page(mocker: MockFixture) -> Mock:
+    return mocker.patch("hypermodern_python.wikipedia.random_page")
 
 
 def test_main_succeeds(runner: CliRunner, mock_requests_get: Mock) -> None:
+    result = runner.invoke(console.main)
+    assert result.exit_code == 0
+
+
+@pytest.mark.e2e
+def test_main_succeeds_in_production_env(runner: CliRunner) -> None:
     result = runner.invoke(console.main)
     assert result.exit_code == 0
 
@@ -45,6 +45,13 @@ def test_main_uses_en_wikipedia_org(runner: CliRunner, mock_requests_get: Mock) 
     assert "en.wikipedia.org" in args[0]
 
 
+def test_main_uses_specified_language(
+    runner: CliRunner, mock_wikipedia_random_page: Mock
+) -> None:
+    runner.invoke(console.main, ["--language=pl"])
+    mock_wikipedia_random_page.assert_called_with(language="pl")
+
+
 def test_main_fails_on_request_error(
     runner: CliRunner, mock_requests_get: Mock
 ) -> None:
@@ -59,21 +66,3 @@ def test_main_prints_message_on_request_error(
     mock_requests_get.side_effect = requests.RequestException
     result = runner.invoke(console.main)
     assert "Error" in result.output
-
-
-@pytest.fixture
-def mock_wikipedia_random_page(mocker: MockFixture) -> Mock:
-    return mocker.patch("hypermodern.wikipedia.random_page")
-
-
-def test_main_uses_specified_language(
-    runner: CliRunner, mock_wikipedia_random_page: Mock
-) -> None:
-    runner.invoke(console.main, ["--language=pl"])
-    mock_wikipedia_random_page.assert_called_with(language="pl")
-
-
-@pytest.mark.e2e
-def test_main_succeeds_in_production_env(runner: CliRunner) -> None:
-    result = runner.invoke(console.main)
-    assert result.exit_code == 0

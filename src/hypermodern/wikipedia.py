@@ -1,6 +1,4 @@
-# src/hypermodern-python/wikipedia.py
 from dataclasses import dataclass
-
 
 import click
 import desert
@@ -22,6 +20,7 @@ schema = desert.schema(Page, meta={"unknown": marshmallow.EXCLUDE})
 
 def random_page(language: str = "en") -> Page:
     url = API_URL.format(language=language)
+
     try:
         with requests.get(url) as response:
             response.raise_for_status()
