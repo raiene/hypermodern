@@ -1,4 +1,4 @@
-[![Tests](https://github.com/raiene/hypermodern/workflows/Tests/badge.svg)]
+[![Tests](https://github.com/raiene/hypermodern/workflows/Tests/badge.svg)]\
 (https://github.com/raiene/hypermodern/actions?workflow=Tests)
 
 # hypermodern
