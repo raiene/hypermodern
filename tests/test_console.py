@@ -19,7 +19,7 @@ def runner() -> CliRunner:
 @pytest.fixture
 def mock_wikipedia_random_page(mocker: MockFixture) -> Mock:
     """Mock random page wikipedia."""
-    return mocker.patch("hypermodern_python.wikipedia.random_page")
+    return mocker.patch("hypermodern.wikipedia.random_page")
 
 
 def test_main_succeeds(runner: CliRunner, mock_requests_get: Mock) -> None:

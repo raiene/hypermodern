@@ -3,7 +3,6 @@
 from dataclasses import dataclass
 
 import click
-import desert
 import marshmallow
 import requests
 
@@ -24,7 +23,19 @@ class Page:
     extract: str
 
 
-schema = desert.schema(Page, meta={"unknown": marshmallow.EXCLUDE})
+class PageSchema(marshmallow.Schema):
+    """Schema for Page resource."""
+
+    title = marshmallow.fields.String()
+    extract = marshmallow.fields.String()
+
+    class Meta:
+        """Meta options."""
+
+        unknown = marshmallow.EXCLUDE
+
+
+schema = PageSchema()
 
 
 def random_page(language: str = "en") -> Page:
@@ -52,12 +63,14 @@ def random_page(language: str = "en") -> Page:
         True
     """
     url = API_URL.format(language=language)
+    headers = {"User-Agent": "Hypermodern Python (github.com/raiene/hypermodern)"}
 
     try:
-        with requests.get(url) as response:
+        with requests.get(url, headers=headers) as response:
             response.raise_for_status()
             data = response.json()
-            return schema.load(data)
+            page_dict = schema.load(data)
+            return Page(**page_dict)
     except (requests.RequestException, marshmallow.ValidationError) as error:
         message = str(error)
         raise click.ClickException(message)
