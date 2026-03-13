@@ -4,13 +4,14 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v1
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
       with:
-        python-version: '3.8'
+        python-version: '3.14'
         architecture: x64
-    - run: pip install nox==2019.11.9
-    - run: pip install poetry==1.0.5
-    - run: nox --sessions tests-3.8 coverage
+    - run: pip install --upgrade pip
+    - run: pip install nox
+    - run: pip install poetry
+    - run: nox --sessions coverage
       env:
         CODECOV_TOKEN: 43796844-5715-435c-b5f6-0a88ee99f0e4
