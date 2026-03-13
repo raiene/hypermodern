@@ -66,11 +66,11 @@ def random_page(language: str = "en") -> Page:
     headers = {"User-Agent": "Hypermodern Python (github.com/raiene/hypermodern)"}
 
     try:
-        with requests.get(url, headers=headers) as response:
+        with requests.get(url, headers=headers, timeout=10) as response:
             response.raise_for_status()
             data = response.json()
             page_dict = schema.load(data)
             return Page(**page_dict)
     except (requests.RequestException, marshmallow.ValidationError) as error:
         message = str(error)
-        raise click.ClickException(message)
+        raise click.ClickException(message) from error
